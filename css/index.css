@@ -1,0 +1,209 @@
+body,
+html {
+    width: 100%;
+    height: 100%;
+    font-family: "Open Sans", sans-serif;
+    color: #58646d;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+#body {
+    display: flex;
+    flex-direction: row;
+}
+
+/*左侧列表容器*/
+.aside-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    height: 100%;
+    padding-top: 1px;
+    box-sizing: border-box;
+    background: #1c262f;
+    color: #fff;
+}
+
+/*列表*/
+/*左侧列表搜索*/
+.aside-wrap > .search {
+    position: relative;
+    margin: 10px 10px 20px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.aside-wrap > .search > .text {
+    display: inline-block;
+    width: 140px;
+    padding: 8px 12px;
+    font-size: 12px;
+    border: none;
+    color: #666;
+    outline: none;
+}
+
+.aside-wrap > .search > .submit {
+    position: absolute;
+    right: 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    background: #F7AD0A;
+    outline: none;
+    border: none;
+    border: 6px;
+    cursor: pointer;
+}
+
+.aside-wrap > .list-wrap {
+    /* 兼容处理 overflow:scroll导致出现的滚动条; */
+    flex: 1;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.aside-wrap > .list-wrap > .list {
+    /* 兼容处理 overflow:scroll导致出现的滚动条; */
+    height: 100%;
+    width: 270px;
+    position: absolute;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-y: scroll;
+
+}
+
+/* 美化overflow:scroll 出现的滚动条; */
+.aside-wrap > .list-wrap > .list::-webkit-scrollbar {
+    display: none
+}
+
+.aside-wrap > .list-wrap > .list > .item {
+    position: relative;
+    padding: 10px 10px 10px 14px;
+    margin-bottom: 10px;
+}
+
+/*位置列表鼠标悬停状态*/
+.aside-wrap > .list-wrap > .list > .item:hover {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/*位置列表文字 鼠标悬停状态*/
+.aside-wrap > .list-wrap > .list > .item:hover > .desc-wrap > .text {
+    color: #F7AD0A;
+    transition: color 0.2s;
+}
+
+/*当前显示列表选中状态*/
+.aside-wrap > .list-wrap > .list > .item > div.active > .text {
+    color: #F7AD0A;
+}
+
+.aside-wrap > .list-wrap > .list > .item > .active:before {
+    content: '';
+    height: 100%;
+    position: absolute;
+    left: -14px;
+    border-left: 2px solid #F62619;
+
+}
+
+.aside-wrap > .list-wrap > .list > .item > .desc-wrap {
+    display: block;
+    color: #fff;
+    position: relative;
+}
+
+.aside-wrap > .list-wrap > .list > .item > .desc-wrap > .title {
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 8px;
+}
+
+.aside-wrap > .list-wrap > .list > .item > .desc-wrap > .address {
+    font-size: 12px;
+    color: #ddd;
+    line-height: 16px;
+}
+
+/*右侧地图区域*/
+.main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+/*右侧头部区域*/
+.main > .header-bar {
+    position: relative;
+    height: 60px;
+    background: #1c262f
+}
+
+/*右侧头部切换按钮*/
+.main > .header-bar > .toggle-icon {
+    margin: 18px 0 0 15px;
+    display: block;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    background: url(https://www.easyicon.net/api/resizeApi.php?id=1183428&size=32) no-repeat;
+}
+
+/*右侧天气*/
+.main > .weather {
+    position: fixed;
+    top: 70px;
+    right: 10px;
+    z-index: 999;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.main > .weather > .wea-title {
+    font-size: 12px;
+}
+
+/*右侧地图区域*/
+.main > .map {
+    flex: 1;
+}
+
+/*点标记样式*/
+.marker-item {
+    width: 19px;
+    height: 31px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    color: #fff;
+    background: url(http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png) no-repeat;
+}
+
+.marker-active {
+    background: url(http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png) no-repeat;
+    background-position: center;
+}
+
+
+

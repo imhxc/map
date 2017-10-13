@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>地图街景</title>
+</head>
+<link rel="stylesheet" href="./css/index.css"/>
+<style>
+
+</style>
+<body id="body">
+<!-- 左侧列表区域 -->
+<aside class="aside-wrap" data-bind="visible: showStatus" id="asideWrap">
+    <div class="search">
+        <input class="text" placeholder="输入筛选词" data-bind="value: searchText" type="search" name="" id="input_id">
+        <button type="button" class="submit" data-bind="click: filter">筛选</button>
+    </div>
+    <!-- 列表 -->
+    <div class="list-wrap">
+        <ul class="list" id="mapList" data-bind="foreach: mapListData">
+            <li class="item" data-bind="click: $parent.selectListRow">
+                <div class="desc-wrap">
+                    <h2 class="title text" data-bind="text: name"></h2>
+                    <p class="address text" data-bind="text: address"></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</aside>
+<!-- 右侧地区区域 -->
+<section class="main">
+    <header class="header-bar"><i data-bind="click: toggleShowStatus" class="toggle-icon"></i></header>
+    <div class="weather">
+        <h2 class="wea-title">长沙市实时天气:</h2>
+        <div class="wea-desc">
+            <p data-bind="text: weatherLow"></p>
+            <p data-bind="text: weatherHigh"></p>
+            <p data-bind="text: weatherType"></p>
+        </div>
+    </div>
+    <section class="map" id="mapContainer">
+
+    </section>
+</section>
+</body>
+
+
+<!-- js -->
+<script type='text/javascript' src='./js/Knockout.js'></script>
+<!-- 高的地图 -->
+<script src="http://webapi.amap.com/maps?v=1.4.0&key=b0a68174bfcc2fcd521140392d5b5342"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script async defer type="text/javascript" src="./js/index.js"></script>
+</html>
+
+
+
+
+
