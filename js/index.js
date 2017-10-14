@@ -81,7 +81,12 @@ var ViewModel = function () {
     }
 
     self.searchText = ko.observable(''); //搜索值绑定
-    self.mapListData = ko.observableArray(mapList); // 地图列表绑定
+    self.mapListData = ko.computed(function() {
+        var list = filterFun(self.searchText(), mapList);
+        return list;
+    });
+    // self.mapListData = ko.observableArray(mapList); // 地图列表绑定
+
     self.toggleShowStatus = function () {
         // 控制列表数据区域显示
         self.showStatus(!self.showStatus());
@@ -95,28 +100,45 @@ var ViewModel = function () {
         middleLinkage(this, this.lng, this.lat)
     };
     // 列表筛选
-    self.filter = function () {
+    /*self.filter = function () {
         self.mapListData(filterFun(self.searchText(), mapList));
-    }
+    }*/
     // 天气 ，分别为最低，最高，天气类型
     self.weatherLow = ko.observable('获取中..');
     self.weatherHigh = ko.observable('获取中..');
     self.weatherType = ko.observable('获取中..');
     // 获取天气
     self.getWeather = function () {
-        $.get('http://wthrcdn.etouch.cn/weather_mini?city=长沙', function (res) {
-            var forecast = res.data.forecast[0];
-            self.weatherHigh(forecast.high);
-            self.weatherLow(forecast.low);
-            self.weatherType(forecast.type)
-        }, 'JSON');
+        $.ajax({
+            type: 'get',
+            dataType: 'JSON',
+            url: 'http://wthrcdn.etouch.cn/weather_mini?city=长沙',
+            timeout: 4000,
+            error: function (XmlHttpRequest, textStatus, errorThrown) {
+                alert('很遗憾，天气数据获取失败');
+                self.weatherHigh('获取失败');
+                self.weatherLow('获取失败');
+                self.weatherType('获取失败');
+            },
+            success: function (result, status) {
+                if (status === 'success' && result.status === 1000 && result.desc === 'OK') {
+                    var forecast = result.data.forecast[0];
+                    self.weatherHigh(forecast.high);
+                    self.weatherLow(forecast.low);
+                    self.weatherType(forecast.type)
+                } else {
+                    alert('很遗憾，天气数据获取失败');
+                    self.weatherHigh('获取失败');
+                    self.weatherLow('获取失败');
+                    self.weatherType('获取失败');
+                }
+            }
+        });
     }
     self.getWeather();
+}
 
-};
-ko.applyBindings(new ViewModel());
-
-// 创建地图 
+// 创建地图
 const CENTER = [112.962154, 28.186602];
 var positions = [];
 var map = new AMap.Map('mapContainer', {
@@ -143,6 +165,7 @@ map.plugin(["AMap.ToolBar"], function () {
 // 实例化地图标记
 addMarker(mapList);
 
+ko.applyBindings(new ViewModel());
 
 /*********************
  * 以下为方法定义     **
@@ -155,6 +178,10 @@ addMarker(mapList);
  * 1.改变列数据列表样式，2.改变标注点样式，3.设置地图中心点。4.请求该地点详细信息 ，并展示
  */
 function middleLinkage(data, lng, lat) {
+    if (infoWindow) {
+        infoWindow.close();   // 关闭信息层
+    }
+    addWait();
     changeMarkerStyle(data.index);
     changeListStyle(data.index);
     setMapCenter(lng, lat);
@@ -187,6 +214,7 @@ function filterFun(searchtStr, container) {
     addMarker(newList);   // 重新设置地图标注， 保证与左侧数据筛选列表一致
     return newList;       // 返回新数组
 }
+
 /*
  * 改变列表选中状态
  * @params: index: napList数据位置索引
@@ -201,6 +229,7 @@ function changeListStyle(index) {
     // 为选中元素添加高亮样式
     mapListItems[index].getElementsByClassName('desc-wrap')[0].className = 'desc-wrap active';
 }
+
 /*
  * 改变地图标注样式
  * @params: index: napList数据位置索引
@@ -215,6 +244,7 @@ function changeMarkerStyle(index) {
         }
     }
 }
+
 /*
  * 重新设置地图中心点
  * @params: lng,lat: 坐标硬编码
@@ -222,6 +252,7 @@ function changeMarkerStyle(index) {
 function setMapCenter(lng, lat) {
     map.setCenter([lng, lat]);
 }
+
 /*
  * 标记点击事件
  * @params: e: 地图标注实例
@@ -262,10 +293,13 @@ function addMarker(mapList) {
             },
             content: '<div class="marker-item">' + (i + 1) + '</div>'   //自定义点标记覆盖物内容
         });
+        // 清楚加载动画
+        clearWait();
         AMap.event.addListener(marker, 'click', markersClick); // 添加标记点击事件
         markers.push(marker); //存入markers变量中，为后续清除标记使用
     }
 }
+
 /*
  * 高德地图api
  * 实例化信息窗口，显示信息层
@@ -356,9 +390,24 @@ function getMarkerInfo(data) {
                 }
                 // 调用openInfo函数，显示信息层
                 openInfo(lng, lat, name, address, newResultBody);
+                clearWait();
             } else {
                 alert('很遗憾，该地点详细信息获取失败');
             }
         }
     });
+}
+/*
+*    清除动画
+* */
+function clearWait () {
+    var waitWrap = document.getElementById('waitWrap');
+    waitWrap.innerHTML = '';
+}
+/*
+*  添加等待动画
+* */
+function addWait () {
+    var waitWrap = document.getElementById('waitWrap');
+    waitWrap.innerHTML = '<div class="sk-spinner sk-spinner-pulse"></div>';
 }
